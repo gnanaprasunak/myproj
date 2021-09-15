@@ -80,6 +80,35 @@ function deleteComments(){
   }
 }
 
+function ApproveComments(){
+  global $connection;
+  //DELETE COMMENTS
+  if(isset($_GET['approve'])){
+    $approve_comment_id=$_GET['approve'];
+    $query="UPDATE comments SET comment_status='approved' WHERE comment_id=$approve_comment_id";
+    $result=mysqli_query($connection,$query);
+    if(!$result){
+      die("Connection Failed".mysqli_error($connection));
+    }
+     header("Location:comments.php");
+  }
+}
+
+function UnapproveComments(){
+  global $connection;
+  //DELETE COMMENTS
+  if(isset($_GET['unapprove'])){
+    $unapprove_comment_id=$_GET['unapprove'];
+    $query="UPDATE comments SET comment_status='unapproved' WHERE comment_id=$unapprove_comment_id";
+    $result=mysqli_query($connection,$query);
+    if(!$result){
+      die("Connection Failed".mysqli_error($connection));
+    }
+     header("Location:comments.php");
+  }
+}
+
+
 
 ?>
 

@@ -24,16 +24,16 @@ if(isset($_GET['source']))
 else
     $source='';
 switch($source){
-  case 'add_posts' :
-    include "../includes/add_posts.php"; 
+  case 'add_users' :
+    include "../includes/add_users.php"; 
     break;
-  case 'edit_posts' : 
-    include "../includes/edit_posts.php"; 
+  case 'edit_users' : 
+    include "../includes/edit_users.php"; 
     break;
   case '300' : echo "300"; break;
 
   default:
-    include "../includes/view_all_comments.php";
+    include "../includes/view_all_users.php";
  }
 ?>
                       

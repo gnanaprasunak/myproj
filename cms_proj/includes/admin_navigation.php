@@ -49,7 +49,7 @@
                     <li>
                         <a href="./categories.php"><i class="fa fa-fw fa-desktop"></i> Categories </a>
                     </li>
-                    <li class="active">
+                    <li>
                         <a href="./comments.php"><i class="fa fa-fw fa-file"></i>Comments</a>
                     </li>
                   
@@ -57,10 +57,10 @@
                         <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-arrows-v"></i> Users <i class="fa fa-fw fa-caret-down"></i></a>
                         <ul id="demo" class="collapse">
                             <li>
-                                <a href="#">Dropdown Item</a>
+                                <a href="./view_all_users.php">View All Users</a>
                             </li>
                             <li>
-                                <a href="#">Dropdown Item</a>
+                                <a href="./add_users.php">Add Users</a>
                             </li>
                         </ul>
                     </li>

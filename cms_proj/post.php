@@ -1,36 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php include "includes/header.php"; ?>
+<!-- Navigation -->
+<?php include "includes/navigation.php"; ?>
 
-<head>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
 
-    <title>Blog Post - Start Bootstrap Template</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="css/blog-post.css" rel="stylesheet">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-</head>
-
-<body>
-
-    <!-- Navigation -->
-    <?php include "includes/navigation.php"; ?>
+<?php 
+                if(isset($_GET['post_id'])){
+                    $post_id=$_GET['post_id'];
+                $query="SELECT * FROM posts WHERE post_id=$post_id";
+                $result=mysqli_query($connection,$query);
+                if(!$result){
+                    die("CONNECTION FAILED".mysqli_error($connection));
+                }
+                while($row=mysqli_fetch_assoc($result)){
+                    $post_title=$row['post_title'];
+                    $post_author=$row['post_author'];
+                    $post_date=$row['post_date'];
+                    $post_content=$row['post_content'];
+                    $post_image=$row['post_image'];
+               
+                ?>
+     
 
 
     <!-- Page Content -->
@@ -44,43 +36,46 @@
                 <!-- Blog Post -->
 
                 <!-- Title -->
-                <h1>Blog Post Title</h1>
+                <h1><?php echo $post_title; ?></h1>
 
                 <!-- Author -->
                 <p class="lead">
-                    by <a href="#">Start Bootstrap</a>
+                    by <a href="#"><?php echo $post_author; ?></a>
                 </p>
 
                 <hr>
 
                 <!-- Date/Time -->
-                <p><span class="glyphicon glyphicon-time"></span> Posted on August 24, 2013 at 9:00 PM</p>
+                <p><span class="glyphicon glyphicon-time"></span> <?php echo $post_date; ?></p>
 
                 <hr>
 
                 <!-- Preview Image -->
-                <img class="img-responsive" src="http://placehold.it/900x300" alt="">
+                <img class="img-responsive" src="images/<?php echo $post_image; ?>" alt="">
 
                 <hr>
 
                 <!-- Post Content -->
-                <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus, vero, obcaecati, aut, error quam sapiente nemo saepe quibusdam sit excepturi nam quia corporis eligendi eos magni recusandae laborum minus inventore?</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos, doloribus, dolorem iusto blanditiis unde eius illum consequuntur neque dicta incidunt ullam ea hic porro optio ratione repellat perspiciatis. Enim, iure!</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error, nostrum, aliquid, animi, ut quas placeat totam sunt tempora commodi nihil ullam alias modi dicta saepe minima ab quo voluptatem obcaecati?</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Harum, dolor quis. Sunt, ut, explicabo, aliquam tenetur ratione tempore quidem voluptates cupiditate voluptas illo saepe quaerat numquam recusandae? Qui, necessitatibus, est!</p>
-
+                
+                <p><?php echo $post_content; ?></p>
                 <hr>
 
-                <!-- Blog Comments -->
+           
+                    <!-- Blog Comments -->
                 <?php 
                 if(isset($_POST['create_comment'])){
                     $post_id=$_GET['post_id'];
                     $comment_author=$_POST['comment_author'];
                     $comment_email=$_POST['comment_email'];
                     $comment_content=$_POST['comment_content'];
+                
 
-                    $query="INSERT INTO comments(comment_author,comment_email,comment_content) VALUES('$comment_author','$comment_email','$comment_content')";
+                    $query="INSERT INTO comments (comment_post_id,comment_author,comment_email,comment_content,comment_status,comment_date) VALUES ($post_id,'$comment_author','$comment_email','$comment_content','unapproved',now())";
+                    $result=mysqli_query($connection,$query);
+                    if(!$result){
+                        die("Connection Failed".mysqli_error($connection));
+                    }
+                    $query="UPDATE posts SET post_comment_count=post_comment_count + 1 WHERE post_id=$post_id";
                     $result=mysqli_query($connection,$query);
                     if(!$result){
                         die("Connection Failed".mysqli_error($connection));
@@ -112,19 +107,32 @@
                 <hr>
 
                 <!-- Posted Comments -->
-
+<?php 
+$query="SELECT * FROM comments WHERE comment_post_id=$post_id AND comment_status='approved' ORDER BY comment_id DESC";
+$result=mysqli_query($connection,$query);
+if(!$result){
+    die("connection failed".mysqli_error($connection));
+}
+while($row=mysqli_fetch_assoc($result)){
+    $comment_date=$row['comment_date'];
+    $comment_content=$row['comment_content'];
+    $comment_author=$row['comment_author'];
+?>
                 <!-- Comment -->
                 <div class="media">
                     <a class="pull-left" href="#">
                         <img class="media-object" src="http://placehold.it/64x64" alt="">
                     </a>
                     <div class="media-body">
-                        <h4 class="media-heading">Start Bootstrap
-                            <small>August 25, 2014 at 9:30 PM</small>
+                        <h4 class="media-heading"><?php echo $comment_date; ?>
+                            <small><?php echo $comment_content; ?></small>
                         </h4>
-                        Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                        <?php echo $comment_author; ?>
                     </div>
                 </div>
+                <?php 
+                 }
+                ?>
 
             
                
@@ -132,61 +140,7 @@
             </div>
 
             <!-- Blog Sidebar Widgets Column -->
-            <div class="col-md-4">
-
-                <!-- Blog Search Well -->
-                <div class="well">
-                    <h4>Blog Search</h4>
-                    <div class="input-group">
-                        <input type="text" class="form-control">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button">
-                                <span class="glyphicon glyphicon-search"></span>
-                        </button>
-                        </span>
-                    </div>
-                    <!-- /.input-group -->
-                </div>
-
-                <!-- Blog Categories Well -->
-                <div class="well">
-                    <h4>Blog Categories</h4>
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <ul class="list-unstyled">
-                                <li><a href="#">Category Name</a>
-                                </li>
-                                <li><a href="#">Category Name</a>
-                                </li>
-                                <li><a href="#">Category Name</a>
-                                </li>
-                                <li><a href="#">Category Name</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-lg-6">
-                            <ul class="list-unstyled">
-                                <li><a href="#">Category Name</a>
-                                </li>
-                                <li><a href="#">Category Name</a>
-                                </li>
-                                <li><a href="#">Category Name</a>
-                                </li>
-                                <li><a href="#">Category Name</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!-- /.row -->
-                </div>
-
-                <!-- Side Widget Well -->
-                <div class="well">
-                    <h4>Side Widget Well</h4>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, perspiciatis adipisci accusamus laudantium odit aliquam repellat tempore quos aspernatur vero.</p>
-                </div>
-
-            </div>
+            <?php include "includes/sidebar.php"; ?>
 
         </div>
         <!-- /.row -->
@@ -204,6 +158,11 @@
         </footer>
 
     </div>
+    <?php
+}
+                }
+    ?>
+
     <!-- /.container -->
 
     <!-- jQuery -->

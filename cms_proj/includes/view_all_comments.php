@@ -48,8 +48,8 @@
                           echo "<td><a href='../post.php?post_id=$comment_post_id'>$post_title</a></td>";
                         }
                           echo "<td>$comment_date</td>";
-                          echo "<td><a href='comments.php?delete={$comment_id}'>Approve</td>";
-                          echo "<td><a href='comments.php?delete={$comment_id}'>Unapprove</td>";
+                          echo "<td><a href='comments.php?approve={$comment_id}'>Approve</td>";
+                          echo "<td><a href='comments.php?unapprove={$comment_id}'>Unapprove</td>";
                           echo "<td><a href='comments.php?delete={$comment_id}'>Delete</td>";
                           echo "</tr>";
                        } 
@@ -60,8 +60,10 @@
                          <?php 
                          deleteComments();
                          ?> 
-                         <!-- <?php 
-                         insertComments();
-                         ?>-->
-                        
+                         <?php 
+                          ApproveComments();
+                         ?> 
+                         <?php 
+                         UnapproveComments();
+                         ?> 
                          
