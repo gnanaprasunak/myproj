@@ -39,7 +39,7 @@ while($row=mysqli_fetch_assoc($result)){
                     <a href="#"><?php echo $post_title; ?></a>
                 </h2>
                 <p class="lead">
-                    by <a href="index.php"><?php echo $post_author; ?></a>
+                    by <a href="author_post.php?post_author=<?php echo $post_author; ?>&post_id=<?php echo $post_id; ?>"><?php echo $post_author; ?></a>
                 </p>
                 <p><span class="glyphicon glyphicon-time"></span> Posted on August <?php echo $post_date; ?> at 10:00 PM</p>
                 <hr>

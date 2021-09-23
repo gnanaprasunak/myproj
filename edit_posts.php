@@ -18,14 +18,14 @@
                         
                        }
                        if(isset($_POST['update_post'])){
-                        $post_category_id=$_POST['post_category'];
+                        $post_category_id=$_POST['post_category_id'];
                         $post_title=$_POST['post_title'];
                         $post_author=$_POST['post_author'];
                         $post_date=date('d-m-y');
                         $post_image=$_FILES['image']['name'];
                         $post_image_temp=$_FILES['image']['tmp_name'];
                         $post_tags=$_POST['post_tags'];
-                        $post_comment_count=4;
+                        $post_comment_count=0;
                         $post_status=$_POST['post_status'];
                         $post_content=$_POST['post_content'];
                         move_uploaded_file($post_image_temp,"../images/$post_image");  
@@ -52,7 +52,7 @@
 <form action="" method="post" enctype="multipart/form-data">
   <div class="form-group">
     <label for="title">Post Category</label>
-    <select name="post_category" class="form-control" id="post_category">
+    <select name="post_category_id" class="form-control" id="post_category">
         <?php 
         $query="SELECT *FROM categories";
         $result=mysqli_query($connection,$query);

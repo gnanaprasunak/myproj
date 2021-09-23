@@ -56,6 +56,7 @@ if(isset($_POST['checkBoxArray'])){
                              <th>Tags</th>
                              <th>Comments</th>
                              <th>Status</th>
+                             <th>ViewPost</th>
                              <th>Action</th>
                              <th>Action</th>
 
@@ -75,6 +76,7 @@ if(isset($_POST['checkBoxArray'])){
                          $post_category_id=$row['post_category_id'];
                          $post_title=$row['post_title'];
                          $post_author=$row['post_author'];
+                         $post_author=$row['post_author'];
                          $post_date=$row['post_date'];
                          $post_image=$row['post_image'];
                          $post_tags=$row['post_tags'];
@@ -92,11 +94,11 @@ if(isset($_POST['checkBoxArray'])){
                           echo "<td>$post_tags</td>";
                           echo "<td>$post_comment_count</td>";
                           echo "<td>$post_status</td>";
+                          echo "<td><a href='../post.php?post_id={$post_id}'>View Post</td>";
                           echo "<td><a href='posts.php?source=edit_post&post_id={$post_id}'>EDIT</td>";
-                          echo "<td><a href='posts.php?delete={$post_id}'>DELETE</td>";
+                          echo "<td><a onclick=\"javascript:return confirm('Are you sure to delete?');\" href='posts.php?delete={$post_id}'>DELETE</td>";
                           echo "</tr>";
                        } 
-                
                         ?>
                        </tbody>
                          </table>
