@@ -16,6 +16,12 @@
 <?php 
                 if(isset($_GET['post_id'])){
                 $post_id=$_GET['post_id'];
+                $query="UPDATE posts SET post_views_count=post_views_count + 1 WHERE post_id=$post_id";
+                $result=mysqli_query($connection,$query);
+                if(!$result){
+                    die("CONNECTION FAILED".mysqli_error($connection));
+                }
+
                 $query="SELECT * FROM posts WHERE post_id=$post_id";
                 $result=mysqli_query($connection,$query);
                 if(!$result){
@@ -123,7 +129,7 @@
 
                 <!-- Posted Comments -->
 <?php 
-$query="SELECT * FROM comments WHERE comment_post_id=$post_id AND comment_status='approved' ORDER BY comment_id DESC";
+$query="SELECT * FROM comments WHERE (comment_post_id=$post_id AND comment_status='approved')  ORDER BY comment_id DESC";
 $result=mysqli_query($connection,$query);
 if(!$result){
     die("connection failed".mysqli_error($connection));
@@ -152,6 +158,9 @@ while($row=mysqli_fetch_assoc($result)){
                 <?php 
                  }
                 ?>
+                else{
+                    header("location:index.php");
+                }
                
 
             </div>

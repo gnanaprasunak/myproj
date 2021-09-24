@@ -7,17 +7,49 @@ if(isset($_POST['checkBoxArray'])){
     switch($bulkoption){
       case 'published':
         $query="UPDATE posts SET post_status='published' WHERE post_id=$post_id";
+        $result=mysqli_query($connection,$query);
+        if(!$result){
+        die('Connection Failed'.mysqli_error($connection));
+        }
         break;
       // case 'draft':
       //     $query="UPDATE posts SET post_status='draft' WHERE post_id=$post_id";
       //     break;
       case 'delete':
-          $query="DELETE FROM posts WHERE post_id=$post_id";
-          break;
-      }
-      $result=mysqli_query($connection,$query);
+        $query="DELETE FROM posts WHERE post_id=$post_id";
+        $result=mysqli_query($connection,$query);
         if(!$result){
-            die("Connection Failed".mysqli_error($connection));
+        die('Connection Failed'.mysqli_error($connection));
+        }
+        break;
+      case 'clone':
+          $query1="SELECT * FROM posts WHERE post_id=$post_id";
+          $result1=mysqli_query($connection,$query1);
+          if(!$result1){
+          die('Connection Failed'.mysqli_error($connection));
+        }
+       
+        
+      while($row=mysqli_fetch_assoc($result1)){
+        $post_id=$row['post_id'];
+        $post_category_id=$row['post_category_id'];
+        $post_title=$row['post_title'];
+        $post_author=$row['post_author'];
+        $post_date=$row['post_date'];
+        $post_image=$row['post_image'];
+        $post_tags=$row['post_tags'];
+        $post_comment_count=$row['post_comment_count'];
+        $post_status=$row['post_status'];
+        $post_content=$row['post_content'];
+
+        $query = "INSERT INTO posts(post_category_id,post_title,post_author,post_date,post_image,post_tags,post_comment_count,post_status,post_content) VALUES($post_category_id,'$post_title','$post_author',$post_date,'$post_image','$post_tags',$post_comment_count,'$post_status','$post_content')";
+        $result = mysqli_query($connection,$query);
+        if(!$result){
+        die("Connection Failed".mysqli_error($connection));
+        }
+
+      }
+      break;
         }
     
   }
@@ -38,6 +70,7 @@ if(isset($_POST['checkBoxArray'])){
       <option value="published">Publish</option>
       <!-- <option value="darft">Draft</option> -->
       <option value="delete">Delete</option>
+      <option value="clone">Clone</option>
     </select>
   </div>
   <div class="col-xs-4">
@@ -59,13 +92,14 @@ if(isset($_POST['checkBoxArray'])){
                              <th>ViewPost</th>
                              <th>Action</th>
                              <th>Action</th>
+                             <th>Views</th>
 
                            </tr>
                          </thead>
                        <tbody>
                        </form>
                          <?php 
-                       $query="SELECT * FROM posts";
+                       $query="SELECT * FROM posts ORDER BY post_id DESC";
                        $result=mysqli_query($connection,$query);
                        if(!$result){
                          die("Connection Failed".mysqli_error($connection));
@@ -82,6 +116,7 @@ if(isset($_POST['checkBoxArray'])){
                          $post_tags=$row['post_tags'];
                          $post_comment_count=$row['post_comment_count'];
                          $post_status=$row['post_status'];
+                         $post_views_count=$row['post_views_count'];
                         
                           echo "<tr>";
                           echo "<td><input type='checkbox' class='checkBoxes' name='checkBoxArray[]' value='$post_id'></td>";
@@ -97,6 +132,7 @@ if(isset($_POST['checkBoxArray'])){
                           echo "<td><a href='../post.php?post_id={$post_id}'>View Post</td>";
                           echo "<td><a href='posts.php?source=edit_post&post_id={$post_id}'>EDIT</td>";
                           echo "<td><a onclick=\"javascript:return confirm('Are you sure to delete?');\" href='posts.php?delete={$post_id}'>DELETE</td>";
+                          echo "<td><a href='posts.php?reset={$post_id}'>$post_views_count</td>";
                           echo "</tr>";
                        } 
                         ?>
@@ -104,6 +140,17 @@ if(isset($_POST['checkBoxArray'])){
                          </table>
                          <?php 
                          deletePosts();
+                         ?>
+                         <?php 
+                         if(isset($_GET['reset'])){
+                          $reset_id=$_GET['reset'];
+                          $query="UPDATE posts SET post_views_count=0 WHERE post_id=$reset_id";
+                          $result=mysqli_query($connection,$query);
+                          if(!$result){
+                            die("Connection Failed".mysqli_error($connection));
+                          }
+                           header("Location:posts.php");
+                          }
                          ?>
                          
                          
