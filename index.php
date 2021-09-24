@@ -1,221 +1,114 @@
-<?php include "../includes/admin_header.php"; ?>
-    <div id="wrapper">
-<?php include "../includes/admin_navigation.php"; ?>
+<?php include "includes/header.php"; ?> 
+<?php include "includes/navigation.php"; ?>
+    <!-- Navigation -->
+    <!-- Page Content -->
+    <div class="container">
 
-        
+        <div class="row">
 
-        <div id="page-wrapper">
+            <!-- Blog Entries Column -->
+            <div class="col-md-8">
 
-            <div class="container-fluid">
-
-                <!-- Page Heading -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">
-                            Welcome to Admin
-
-                            <small><?php echo $_SESSION['username']; ?></small>
-
-                            <small>Author</small>
-                        </h1>
-                    
-                    </div>
-                </div>
-                <!-- /.row -->
-
-                <!-- /.row -->
-                
-                <div class="row">
-    <div class="col-lg-3 col-md-6">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <i class="fa fa-file-text fa-5x"></i>
-                    </div>
-                    <div class="col-xs-9 text-right">
-                       <?php 
-                       $query="SELECT * FROM posts";
-                       $result=mysqli_query($connection,$query);
-                       $post_count=mysqli_num_rows($result);
-                       if(!$result){
-                           die('Connection Failed'.mysqli_error($connection));
-                       }
-                       
-                       ?>
-                  <div class='huge'><?php echo $post_count; ?></div>
-                        <div>Posts</div>
-                    </div>
-                </div>
-            </div>
-            <a href="posts.php">
-                <div class="panel-footer">
-                    <span class="pull-left">View Details</span>
-                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                    <div class="clearfix"></div>
-                </div>
-            </a>
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-6">
-        <div class="panel panel-green">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <i class="fa fa-comments fa-5x"></i>
-                    </div>
-                    <div class="col-xs-9 text-right">
-                    <?php 
-                       $query="SELECT * FROM comments";
-                       $result=mysqli_query($connection,$query);
-                       $comment_count=mysqli_num_rows($result);
-                       if(!$result){
-                           die('Connection Failed'.mysqli_error($connection));
-                       }
-                       
-                       ?>
-                     <div class='huge'><?php echo $comment_count; ?></div>
-                      <div>Comments</div>
-                    </div>
-                </div>
-            </div>
-            <a href="comments.php">
-                <div class="panel-footer">
-                    <span class="pull-left">View Details</span>
-                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                    <div class="clearfix"></div>
-                </div>
-            </a>
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-6">
-        <div class="panel panel-yellow">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <i class="fa fa-user fa-5x"></i>
-                    </div>
-                    <div class="col-xs-9 text-right">
-                    <?php 
-                       $query="SELECT * FROM users";
-                       $result=mysqli_query($connection,$query);
-                       $users_count=mysqli_num_rows($result);
-                       if(!$result){
-                           die('Connection Failed'.mysqli_error($connection));
-                       }
-                       
-                       ?>
-                    <div class='huge'><?php echo $users_count; ?></div>
-                        <div> Users</div>
-                    </div>
-                </div>
-            </div>
-            <a href="users.php">
-                <div class="panel-footer">
-                    <span class="pull-left">View Details</span>
-                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                    <div class="clearfix"></div>
-                </div>
-            </a>
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-6">
-        <div class="panel panel-red">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <i class="fa fa-list fa-5x"></i>
-                    </div>
-                    <div class="col-xs-9 text-right">
-                    <?php 
-                       $query="SELECT * FROM categories";
-                       $result=mysqli_query($connection,$query);
-                       $categories_count=mysqli_num_rows($result);
-                       if(!$result){
-                           die('Connection Failed'.mysqli_error($connection));
-                       }
-                       
-                       ?>
-                        <div class='huge'><?php echo $categories_count; ?></div>
-                         <div>Categories</div>
-                    </div>
-                </div>
-            </div>
-            <a href="categories.php">
-                <div class="panel-footer">
-                    <span class="pull-left">View Details</span>
-                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                    <div class="clearfix"></div>
-                </div>
-            </a>
-        </div>
-    </div>
-</div>
+                <h1 class="page-header">
+                    Page Heading
+                    <small>Secondary Text</small>
+                </h1>
 <?php 
-$query="SELECT * FROM posts WHERE post_status='draft' ";
-$result=mysqli_query($connection,$query);
-$draft_count=mysqli_num_rows($result);
-if(!$result){
-    die('Connection Failed'.mysqli_error($connection));
+ $page_count=5;
+if(isset($_GET['page'])){
+    $page=$_GET['page'];
 }
-$query="SELECT * FROM posts WHERE post_status='published' ";
-$result=mysqli_query($connection,$query);
-$published_count=mysqli_num_rows($result);
+else
+    $page="";
+if($page="" || $page==1)
+    $postno = 0;
+else
+    $postno = ($page * $page_count) - $page_count;
+
+
+$query="SELECT * FROM posts WHERE post_status='published'";
+$result = mysqli_query($connection,$query);
 if(!$result){
-    die('Connection Failed'.mysqli_error($connection));
+    die ('Query Failed'.mysqli_error($connection));
 }
-$query="SELECT * FROM comments WHERE comment_status='unapproved' ";
-$result=mysqli_query($connection,$query);
-$unapproved_count=mysqli_num_rows($result);
-if(!$result){
-    die('Connection Failed'.mysqli_error($connection));
-}
-$query="SELECT * FROM users WHERE user_role='subscriber' ";
-$result=mysqli_query($connection,$query);
-$subscriber_count=mysqli_num_rows($result);
-if(!$result){
-    die('Connection Failed'.mysqli_error($connection));
-}
+$count=mysqli_num_rows($result);
+$count=ceil($count  / $page_count);
+echo $count;
 
 
 
+$query1="SELECT * FROM posts WHERE post_status='published' LIMIT $postno,page_count";
+$result1 = mysqli_query($connection,$query1);
+if(!$result1){
+    die ("Query Failed".mysqli_error($connection));
+}
+$cnt=0;
+while($row=mysqli_fetch_assoc($result1)){
+    $cnt++;
+    $post_id=$row['post_id'];
+    $post_category_id=$row['post_category_id'];
+    $post_title=$row['post_title'];
+    $post_author=$row['post_author'];
+    $post_date=$row['post_date'];
+    $post_image=$row['post_image'];
+    $post_content=$row['post_content'];
+    $post_tags=$row['post_tags'];
+    $post_comment_count=$row['post_comment_count'];
+    $post_status=$row['post_status'];
 ?>
-                <!-- /.row -->
-                <div class="row">
-                <script type="text/javascript">
-      google.charts.load('current', {'packages':['bar']});
-      google.charts.setOnLoadCallback(drawChart);
+                
+<!-- First Blog Post -->
+                <h2>
+                    <a href="#"><?php echo $post_title; ?></a>
+                </h2>
+                <p class="lead">
+                    by <a href="author_post.php?post_author=<?php echo $post_author; ?>&post_id=<?php echo $post_id; ?>"><?php echo $post_author; ?></a>
+                </p>
+                <p><span class="glyphicon glyphicon-time"></span> Posted on August <?php echo $post_date; ?> at 10:00 PM</p>
+                <hr>
+                <a href="post.php?post_id=<?php echo $post_id ?>;">
+                <img class="img-responsive" src="images/<?php echo $post_image; ?>" alt="" width="50%">
+                </a>
+                <hr>
+                <p><?php echo $post_content; ?></p>
+                <a class="btn btn-primary" href="post.php?post_id=<?php echo $post_id; ?>">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
 
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-          ['Data','Count'],
-          <?php 
-          $text=['All Posts','Published Posts','drafts','Comments','unapproved','Users','subcribers','Categories'];
-          $value=[$post_count,$published_count,$draft_count,$comment_count,$unapproved_count,$users_count,$subscriber_count,$categories_count];
-          for($i=0;$i<8;$i++){
-              echo "['".$text[$i]."',".$value[$i]."],";
-          }
-          ?>
-        ]);
+                <hr>
+    <?php 
+}
+    if($cnt==0){
+    echo "<h1>NO POSTS SORRY</h1>";
+}
+?>
 
-        var options = {
-          chart: {
-            title: '',
-            subtitle: '',
-          }
-        };
-
-        var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
-
-        chart.draw(data, google.charts.Bar.convertOptions(options));
-      }
-    </script>
-    <div id="columnchart_material" style="width: auto; height: 500px;"></div>
-                </div>
+               
+                <!-- Pager -->
+                <ul class="pager">
+                    <li class="previous">
+                        <a href="#">&larr; Older</a>
+                    </li>
+                    <li class="next">
+                        <a href="#">Newer &rarr;</a>
+                    </li>
+                </ul>
 
             </div>
-            <!-- /.container-fluid -->
+
+<?php include "includes/sidebar.php"; ?>
 
         </div>
-<?php include "../includes/admin_footer.php"; ?>
+        <!-- /.row -->
 
+        <hr>
+
+
+        <ul class="pager">
+        <?php
+        for($i=1;$i<=$count;$i++){
+            echo "<li><a href='index.php?page={$i}'>{$i}</a></li>";
+            
+        }
+
+        ?>
+        </ul>
+<?php include "includes/footer.php"; ?>
