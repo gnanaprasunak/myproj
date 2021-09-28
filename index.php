@@ -37,7 +37,7 @@ echo $count;
 
 
 
-$query1="SELECT * FROM posts WHERE post_status='published' LIMIT $postno,page_count";
+$query1="SELECT * FROM posts WHERE post_status='published'";
 $result1 = mysqli_query($connection,$query1);
 if(!$result1){
     die ("Query Failed".mysqli_error($connection));
@@ -102,7 +102,7 @@ while($row=mysqli_fetch_assoc($result1)){
         <hr>
 
 
-        <ul class="pager">
+        <!-- <ul class="pager">
         <?php
         for($i=1;$i<=$count;$i++){
             echo "<li><a href='index.php?page={$i}'>{$i}</a></li>";
@@ -110,5 +110,5 @@ while($row=mysqli_fetch_assoc($result1)){
         }
 
         ?>
-        </ul>
+        </ul> -->
 <?php include "includes/footer.php"; ?>
